@@ -60,6 +60,12 @@
         &copy; 2023 Nico's Shop. Todos los derechos reservados.
       </p>
     </footer>
+    <script>
+      if (!localStorage.getItem("token")) {
+        window.location.href = "login.html";
+
+      }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="app.js"></script>
   </body>
