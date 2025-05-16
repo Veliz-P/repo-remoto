@@ -1,6 +1,7 @@
 const contenedorProductos = document.getElementById("productos");
 const contenedorCategorias = document.getElementById("categorias");
 const entradaBusqueda = document.getElementById("busqueda");
+const contenedorDetalleProducto = document.getElementById("contenedor-detalle-producto");
 
 let productos = [];
 let categoriaSeleccionada = "all";
@@ -45,7 +46,18 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarTodosLosProductos();
   cargarCategorias();
   entradaBusqueda.addEventListener("input", filtrarProductos);
-}
+  }
+  if(contenedorDetalleProducto){
+    const  urlParams = new URLSearchParams(window.location.search);
+    const productoId = urlParams.get("id");
+    if(productoId){
+      cargarProducto(productoId);
+      const botonRegresar = document.getElementById("btn-regresar");
+      botonRegresar.addEventListener("click", ()=>{
+      location.href = "index.html";
+      });
+    } 
+  }
 });
 
 //Lógica de productos
@@ -97,12 +109,17 @@ function mostrarProductos(listaProductos) {
         duration-200 ease-in-out`;
 
     div.innerHTML = `
-      <img src="${producto.image}" alt="${producto.title}" class="w-32 h-32 object-contain">
+      <img src="${producto.image}" alt="${producto.title}" class="w-32 h-32 
+      object-contain">
       <h2 class="text-lg font-bold text-center">${producto.title}</h2>
       <p class="text-gray-700 text-center mt-2">$${producto.price}</p>
-      <button class="bg-blue-600 hover:bg-blue-700 mt-3 text-white 
-      font-bold py-2 px-4 rounded">Agregar al carrito</button>
+      <button class="btn-detalle-producto bg-blue-600 hover:bg-blue-700 mt-3 text-white 
+      font-bold py-2 px-4 rounded">+Detalles</button>
     `;
+
+    div.querySelector(".btn-detalle-producto").addEventListener("click", () => {
+      window.location.href = `detalle.html?id=${producto.id}`;
+    });
 
     contenedorProductos.appendChild(div);
   });
@@ -147,19 +164,46 @@ function mostrarCategorias(categorias) {
   });
 }
 
-botonCerrarSesion = document.getElementById("btn-cerrar-sesion");
+const botonCerrarSesion = document.getElementById("btn-cerrar-sesion");
 botonCerrarSesion.addEventListener("click", ()=>{
   localStorage.removeItem("token");
   location.href = "login.html";
 });
 
 
-entradaBusqueda.addEventListener("input", filtrarProductos);
+async function cargarProducto(id){
+  try{;
+    const response = await fetch(`https://fakestoreapi.com/products/`+id);
+    if(!response.ok){
+      throw new Error("No hay respuesta del servidor de la API");
+    }
+    const producto = await response.json();
+    mostrarProducto(producto); //Implementar 
+  }catch(error){
+    console.error("Error al obtener el producto:", error);
+  }
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-  cargarTodosLosProductos();
-  cargarCategorias();
-});
+function mostrarProducto(producto){
+  contenedorDetalleProducto.innerHTML = "";
+  const div = document.createElement("div");
+  div.className = `grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-10 px-10 py-4 bg-white rounded-lg `;
+  div.innerHTML = `
+  <div>
+    <img src="${producto.image}" alt="${producto.title}" class="object-contain">
+  </div>
+  <div class="flex flex-col justify-center items-start">
+    <h2 class="font-bold text-xl bg-sky-600 text-white p-2 rounded-md">${producto.title}</h2>
+    <h3 class="font-bold text-xl mt-3">$${producto.price}</h3>
+    <p class="mt-3"><b>Description: </b></p>
+    <p class="text-base/8 text-gray-700">${producto.description}</p>
+    <p class="mt-3"><b>Category: </b>${producto.category}</p>
+    <button class="btn-agregar-carrito bg-sky-600 hover:bg-sky-700 mt-5 text-white
+    font-bold py-2 px-4 rounded">🛒 Agregar al carrito</button>
+  </div>`;
+  contenedorDetalleProducto.appendChild(div);
+}
+
 
 
 
