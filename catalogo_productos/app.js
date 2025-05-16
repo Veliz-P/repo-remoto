@@ -52,12 +52,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const productoId = urlParams.get("id");
     if(productoId){
       cargarProducto(productoId);
-      const botonRegresar = document.getElementById("btn-regresar");
-      botonRegresar.addEventListener("click", ()=>{
-      location.href = "index.html";
-      });
     } 
   }
+  const botonRegresar = document.getElementById("btn-regresar");
+      botonRegresar.addEventListener("click", ()=>{
+      location.href = "index.html";
+  });
 });
 
 //Lógica de productos
