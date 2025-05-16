@@ -147,6 +147,13 @@ function mostrarCategorias(categorias) {
   });
 }
 
+botonCerrarSesion = document.getElementById("btn-cerrar-sesion");
+botonCerrarSesion.addEventListener("click", ()=>{
+  localStorage.removeItem("token");
+  location.href = "login.html";
+});
+
+
 entradaBusqueda.addEventListener("input", filtrarProductos);
 
 document.addEventListener("DOMContentLoaded", () => {

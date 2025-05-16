@@ -26,6 +26,10 @@
           >
             <a href="">Contacto</a>
           </li>
+          <button id="btn-cerrar-sesion" 
+            class="hidden font-semibold bg-red-500 px-3 ml-5 mr-1 rounded-lg hover:bg-red-600
+            hover:shadow-md hover:shadow-red-600/100
+            transition-all duration-300 ease">Log out</button>
         </ul>
       </nav>
     </header>
@@ -61,9 +65,14 @@
       </p>
     </footer>
     <script>
+      const btnCerrarSesion = document.getElementById("btn-cerrar-sesion"); 
       if (!localStorage.getItem("token")) {
         window.location.href = "login.html";
-
+        btnCerrarSesion.classList.remove("block");
+        btnCerrarSesion.classList.add("hidden");
+      }else{
+        btnCerrarSesion.classList.remove("hidden");
+        btnCerrarSesion.classList.add("block"); 
       }
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
