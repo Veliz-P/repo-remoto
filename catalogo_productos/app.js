@@ -2,7 +2,8 @@ const contenedorProductos = document.getElementById("productos");
 const contenedorCategorias = document.getElementById("categorias");
 const entradaBusqueda = document.getElementById("busqueda");
 const contenedorDetalleProducto = document.getElementById("contenedor-detalle-producto");
-
+const map = document.getElementById("map");
+const botonRegresar = document.getElementById("btn-regresar");
 let productos = [];
 let categoriaSeleccionada = "all";
 //Login de la app
@@ -47,17 +48,21 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarCategorias();
   entradaBusqueda.addEventListener("input", filtrarProductos);
   }
-  if(contenedorDetalleProducto){
+  if(contenedorDetalleProducto && botonRegresar){
     const  urlParams = new URLSearchParams(window.location.search);
     const productoId = urlParams.get("id");
     if(productoId){
       cargarProducto(productoId);
+      botonRegresar.addEventListener("click", ()=>{
+      location.href = "index.html#catalogo";
+      });
     } 
   }
-  const botonRegresar = document.getElementById("btn-regresar");
-      botonRegresar.addEventListener("click", ()=>{
+  if (map && botonRegresar){
+    botonRegresar.addEventListener("click", ()=>{
       location.href = "index.html";
   });
+  }
 });
 
 //Lógica de productos
@@ -104,14 +109,14 @@ function mostrarProductos(listaProductos) {
 
   listaProductos.forEach((producto) => {
     const div = document.createElement("div");
-    div.className = `rounded-lg hover:shadow-lg p-4 m-2 bg-white flex flex-col 
-        justify-between items-center transition-shadow 
+    div.className = `rounded-lg hover:shadow-lg px-2 md:px-8 m-2 bg-white flex flex-col 
+        justify-evenly items-center transition-shadow 
         duration-200 ease-in-out relative`;
 
     div.innerHTML = `
-      <img src="${producto.image}" alt="${producto.title}" class="w-32 h-32 
+      <img src="${producto.image}" alt="${producto.title}" class="w-40 h-32 
       object-contain">
-      <h2 class="text-lg font-bold text-center">${producto.title}</h2>
+      <h2 class="font-bold text-center break-all sm:break-normal hyphens-auto">${producto.title}</h2>
       <p class="text-gray-700 text-center mt-2">$${producto.price}</p>
       <button class="btn-detalle-producto bg-red-400 text-white 
       font-bold py-2 px-4 rounded absolute inset-100 top-0 right-0 text-lg
@@ -147,7 +152,7 @@ function mostrarCategorias(categorias) {
     const boton = document.createElement("button");
     boton.textContent =
       cat === "all" ? "Todos" : cat.charAt(0).toUpperCase() + cat.slice(1);
-    boton.className = `bg-slate-400 font-semibold px-8 py-1 rounded-full text-lg
+    boton.className = `bg-slate-400 font-semibold px-8 py-1 rounded-full text-sm md:text-lg
       hover:bg-slate-600 hover:text-white shadow-xl 
       transition-colors duration-200 ease-in-out ${
         categoriaSeleccionada === cat
