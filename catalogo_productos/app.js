@@ -106,15 +106,16 @@ function mostrarProductos(listaProductos) {
     const div = document.createElement("div");
     div.className = `rounded-lg hover:shadow-lg p-4 m-2 bg-white flex flex-col 
         justify-between items-center transition-shadow 
-        duration-200 ease-in-out`;
+        duration-200 ease-in-out relative`;
 
     div.innerHTML = `
       <img src="${producto.image}" alt="${producto.title}" class="w-32 h-32 
       object-contain">
       <h2 class="text-lg font-bold text-center">${producto.title}</h2>
       <p class="text-gray-700 text-center mt-2">$${producto.price}</p>
-      <button class="btn-detalle-producto bg-blue-600 hover:bg-blue-700 mt-3 text-white 
-      font-bold py-2 px-4 rounded">+Detalles</button>
+      <button class="btn-detalle-producto bg-red-400 text-white 
+      font-bold py-2 px-4 rounded absolute inset-100 top-0 right-0 text-lg
+      hover:after:content-['Ver_detalles'] shadow-2xl shadow-black/50">+​</button>
     `;
 
     div.querySelector(".btn-detalle-producto").addEventListener("click", () => {
@@ -187,7 +188,8 @@ async function cargarProducto(id){
 function mostrarProducto(producto){
   contenedorDetalleProducto.innerHTML = "";
   const div = document.createElement("div");
-  div.className = `grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-10 px-10 py-4 bg-white rounded-lg `;
+  div.className = `grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-10 px-10 py-4 bg-white rounded-lg
+                    relative`;
   div.innerHTML = `
   <div>
     <img src="${producto.image}" alt="${producto.title}" class="object-contain">
