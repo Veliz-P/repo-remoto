@@ -30,14 +30,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const data = await response.json();
         localStorage.setItem("token", data.token); //almacenar token en local storage (almacenamiento localmente en el navegador)
-        mensaje.textContent = "Inicio de sesión exitoso";
+        mensaje.textContent = "Inicio de sesión exitoso ✔️​";
         mensaje.classList.add("text-green-500");
         setTimeout(() => {
           window.location.href = "index.html"; //redireccionar a la página principal
         }, 2000); //después de 2 segundos
       } catch (error) {
         console.error("Error al iniciar sesión:", error);
-        mensaje.textContent = "Error al iniciar sesión. Inténtalo de nuevo.";
+        mensaje.textContent = "Error al iniciar sesión. Inténtalo de nuevo. ❌​";
         mensaje.classList.add("text-red-500");
       }
     });
@@ -192,7 +192,8 @@ function mostrarProducto(producto){
                     relative place-items-center`;
   div.innerHTML = `
   <div>
-    <img src="${producto.image}" alt="${producto.title}" class="object-contain object-center h-96">
+    <img src="${producto.image}" alt="${producto.title}" class="object-contain object-center h-96"
+    loading="lazy">
   </div>
   <div class="flex flex-col justify-center items-start">
     <h2 class="font-bold text-xl bg-sky-600 text-white p-2 rounded-md">${producto.title}</h2>
