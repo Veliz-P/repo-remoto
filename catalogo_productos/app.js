@@ -188,11 +188,11 @@ async function cargarProducto(id){
 function mostrarProducto(producto){
   contenedorDetalleProducto.innerHTML = "";
   const div = document.createElement("div");
-  div.className = `grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-10 px-10 py-4 bg-white rounded-lg
-                    relative`;
+  div.className = `grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-10 px-5 py-4 bg-white rounded-lg
+                    relative place-items-center`;
   div.innerHTML = `
   <div>
-    <img src="${producto.image}" alt="${producto.title}" class="object-contain">
+    <img src="${producto.image}" alt="${producto.title}" class="object-contain object-center h-96">
   </div>
   <div class="flex flex-col justify-center items-start">
     <h2 class="font-bold text-xl bg-sky-600 text-white p-2 rounded-md">${producto.title}</h2>
