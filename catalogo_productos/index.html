@@ -149,9 +149,9 @@
     <script>
       const btnCerrarSesion = document.getElementById("btn-cerrar-sesion"); 
       if (!localStorage.getItem("token")) {
-        window.location.href = "login.html";
         btnCerrarSesion.classList.remove("block");
         btnCerrarSesion.classList.add("hidden");
+        window.location.href = "login.html";
       }else{
         btnCerrarSesion.classList.remove("hidden");
         btnCerrarSesion.classList.add("block"); 
