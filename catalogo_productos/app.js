@@ -72,11 +72,12 @@ document.addEventListener("DOMContentLoaded", () => {
 //Lógica de productos
 async function cargarTodosLosProductos() {
   try {
-    const respuesta = await fetch("https://fakestoreapi.com/products");
+    const respuesta = await fetch("http://127.0.0.1:8000/api/productos"); //Cambio
     if (!respuesta.ok) {
       throw new Error("No hay respuesta del servidor de la API");
     }
     productos = await respuesta.json();
+    console.log(productos);
     if (productos.length === 0) {
       console.log("No hay productos disponibles");
     } else {
@@ -86,7 +87,8 @@ async function cargarTodosLosProductos() {
     console.error("Error al obtener los productos:", error);
   }
 }
-function filtrarProductos() {
+/*
+function filtrarProductos() { //comentar
   let productosFiltrados = productos;
   if (categoriaSeleccionada !== "all") {
     productosFiltrados = productos.filter(
@@ -104,7 +106,10 @@ function filtrarProductos() {
   }
   mostrarProductos(productosFiltrados);
 }
-function mostrarProductos(listaProductos) {
+  */
+
+/*
+function mostrarProductos(listaProductos) { //descomentar
   contenedorProductos.innerHTML = "";
   listaProductos.forEach((producto) => {
     const div = document.createElement("div");
@@ -125,9 +130,35 @@ function mostrarProductos(listaProductos) {
     contenedorProductos.appendChild(div);
   });
 }
+*/
 
+function mostrarProductos(listaProductos) { 
+  contenedorProductos.innerHTML = "";
+  listaProductos.forEach((producto) => {
+    const div = document.createElement("div");
+    div.className = `rounded-lg hover:shadow-lg px-2 md:px-8 py-3 m-2 bg-white flex flex-col 
+        justify-evenly items-center transition-shadow 
+        duration-200 ease-in-out relative`;
+        
+    div.innerHTML = `
+      <img src="${producto.imagen}" alt="${producto.titulo}" class="w-40 h-32 object-contain">
+      <h2 class="font-bold text-center break-all sm:break-normal hyphens-auto">${producto.titulo}</h2>
+      <p class="text-gray-700 text-center mt-2">$${producto.precio}</p>
+      <p class="text-gray-700 text-center mt-2">${producto.descripcion}</p>
+      <p class="text-sky-600 text-center mt-2 font-medium bg-sky-100 p-2 rounded-lg">Stock: ${producto.stock}</p>
+      <button class="btn-detalle-producto bg-red-400 text-white 
+      font-bold py-2 px-4 rounded absolute inset-100 top-0 right-0 text-lg
+      hover:after:content-['Ver_detalles'] shadow-2xl shadow-black/50">+​</button>`;
+    div.querySelector(".btn-detalle-producto").addEventListener("click", () => {
+      window.location.href = `detalle.html?id=${producto.id}`;
+    });
+    contenedorProductos.appendChild(div);
+  });
+}
+
+/*
 //Lógica de categorías
-async function cargarCategorias() {
+async function cargarCategorias() { //Comentar
   try {
     const respuesta = await fetch(
       "https://fakestoreapi.com/products/categories"
@@ -141,7 +172,7 @@ async function cargarCategorias() {
     console.error("Error al obtener las categorías:", error);
   }
 }
-function mostrarCategorias(categorias) {
+function mostrarCategorias(categorias) { //comentar
   contenedorCategorias.innerHTML = "";
   categorias.forEach((cat) => {
     const boton = document.createElement("button");
@@ -162,7 +193,9 @@ function mostrarCategorias(categorias) {
     contenedorCategorias.appendChild(boton);
   });
 }
+*/
 
+/*
 //Lógica de detalle de producto
 async function cargarProducto(id){
   try{;
@@ -198,7 +231,7 @@ function mostrarProducto(producto){
   contenedorDetalleProducto.appendChild(div);
 }
 
-
+*/
 
 
 
