@@ -73,4 +73,13 @@ class ProductoController extends Controller
         $producto->delete();
         return response()->json(['message' => 'Producto eliminado correctamente'],204);
     }
+
+    public function changeProductImage(Request $request, $id){
+        $producto = Producto::findOrFail($id);
+        $validatedData = $request->validate([
+            'imagen' => 'required|string',
+        ]);
+        $producto->update($validatedData);
+        return response()->json($producto,200);
+    }
 }
