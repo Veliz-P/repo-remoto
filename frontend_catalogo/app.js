@@ -272,7 +272,7 @@ function mostrarProducto(producto) {
                     relative place-items-center break-all sm:break-normal hyphens-auto`;
   div.innerHTML = `
     <div>
-      <img src="${producto.imagen}" alt="${producto.titulo}" class="object-cover
+      <img src="${producto.imagen}" alt="${producto.titulo}" class="object-contain
         h-96 rounded-2xl shadow-lg"
       loading="lazy">
     </div>
