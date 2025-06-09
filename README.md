@@ -6,12 +6,12 @@ encuentra disponible la opción de cambiar las imágenes de los productos los cu
 
 **Tecnologías utilizadas:**
   **Backend:**
-    1. LARAVEL (PHP)
-    **Frontend:**
-    1. HTML
-    2. TAILWIND CSS (CDN)
-    3. JAVASCRIPT
-    4. Firebase (CDN)
+    - LARAVEL (PHP)
+  **Frontend:**
+    - HTML
+    - TAILWIND CSS (CDN)
+    - JAVASCRIPT
+    - Firebase (CDN)
 
 **Requisitos y pasos para ejecutar el sistema**
   **Requisitos:**
