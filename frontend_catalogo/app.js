@@ -14,9 +14,15 @@ const formularioProducto = document.getElementById("formulario-producto");
 const btnCrearProducto = document.getElementById("crear-producto");
 const overlay = document.getElementById("overlay");
 const contenedorCategoriasSeleccionadas = document.getElementById("categorias-seleccionadas");
-const contenedorDetalleProducto = document.getElementById(
-  "contenedor-detalle-producto"
-);
+const contenedorDetalleProducto = document.getElementById("contenedor-detalle-producto");
+
+//Campos del formulario
+const productoTitulo = document.getElementById("producto-titulo");
+const productoPrecio = document.getElementById("producto-precio");
+const productoImagen = document.getElementById("producto-imagen");
+const productoStock = document.getElementById("producto-stock");
+const productoDescripcion = document.getElementById("producto-descripcion");
+
 const map = document.getElementById("map");
 const botonRegresar = document.getElementById("btn-regresar");
 let productos = [];
@@ -118,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
       await cargarCategorias();
       const categoriasFormularioSelect = document.getElementById("categorias-formulario");
       categoriasFormularioSelect.innerHTML = "";
-      contenedorCategoriasSeleccionadas.innerHTML = "";
       categorias.forEach((cat)=>{
         const option = document.createElement("option");
         option.value = cat.id;
@@ -134,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnCerrarFomulario.addEventListener("click", () => {
       overlay.classList.add("hidden");
       formularioProducto.classList.add("hidden");
+      limpiarFormularioProducto();
     });
   }
 });
@@ -159,6 +165,16 @@ function categoriaFormAgregada(categoriaId){
 
 function quitarCategoriaSeleccionadaForm(categoriaId){
   categoriasSeleccionadasForm = categoriasSeleccionadasForm.filter(id => id !== categoriaId);
+}
+
+function limpiarFormularioProducto() {
+  categoriasSeleccionadasForm = [];
+  contenedorCategoriasSeleccionadas.innerHTML = "";
+  productoTitulo.value = "";
+  productoPrecio.value = "";
+  productoImagen.value = "";
+  productoStock.value = "";
+  productoDescripcion.value = "";
 }
 
 //Lógica de productos
