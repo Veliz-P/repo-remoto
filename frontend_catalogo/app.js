@@ -9,6 +9,11 @@ const contenedorProductos = document.getElementById("productos");
 const contenedorCategorias = document.getElementById("categorias");
 const entradaBusqueda = document.getElementById("busqueda");
 const panelAdmin = document.getElementById("panel-admin");
+const btnCerrarFomulario = document.getElementById("cerrar-formulario");
+const formularioProducto = document.getElementById("formulario-producto");
+const btnCrearProducto = document.getElementById("crear-producto");
+const overlay = document.getElementById("overlay");
+const contenedorCategoriasSeleccionadas = document.getElementById("categorias-seleccionadas");
 const contenedorDetalleProducto = document.getElementById(
   "contenedor-detalle-producto"
 );
@@ -16,6 +21,9 @@ const map = document.getElementById("map");
 const botonRegresar = document.getElementById("btn-regresar");
 let productos = [];
 let categoriaSeleccionada = "all";
+let modoFormulario = "crear"; //Puede cambiar a "editar"
+let categorias = [];
+let categoriasSeleccionadasForm = [];
 //Login de la app
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
@@ -100,7 +108,58 @@ document.addEventListener("DOMContentLoaded", () => {
       location.href = "index.html";
     });
   }
+
+
+  if(btnCerrarFomulario && formularioProducto && btnCrearProducto){
+    btnCrearProducto.addEventListener("click", async () => {
+      modoFormulario = "crear";
+      overlay.classList.remove("hidden");
+      formularioProducto.classList.remove("hidden");
+      await cargarCategorias();
+      const categoriasFormularioSelect = document.getElementById("categorias-formulario");
+      categoriasFormularioSelect.innerHTML = "";
+      contenedorCategoriasSeleccionadas.innerHTML = "";
+      categorias.forEach((cat)=>{
+        const option = document.createElement("option");
+        option.value = cat.id;
+        option.textContent = cat.nombre;
+        categoriasFormularioSelect.appendChild(option);
+      })
+      categoriasFormularioSelect.addEventListener("change", (e) => {
+        agregarCategoriaSeleccionadaForm(e.target.value);
+        console.log(categoriasSeleccionadasForm);
+      });
+    });
+
+    btnCerrarFomulario.addEventListener("click", () => {
+      overlay.classList.add("hidden");
+      formularioProducto.classList.add("hidden");
+    });
+  }
 });
+
+//Lógica de formulario
+function agregarCategoriaSeleccionadaForm(categoriaId){
+  if (categoriaId && !categoriaFormAgregada(categoriaId)) {
+    categoriasSeleccionadasForm.push(categoriaId);
+    const categoria = categorias.find(cat => cat.id === parseInt(categoriaId));
+    if(categoria){
+      const span = document.createElement("span");
+      span.textContent = categoria.nombre;
+      span.classList.add("bg-green-400", "text-white", "px-2", "py-1", "mr-2", "rounded");
+      contenedorCategoriasSeleccionadas.appendChild(span);
+    }
+    
+  }
+}
+
+function categoriaFormAgregada(categoriaId){
+  return categoriasSeleccionadasForm.some(id => id === categoriaId);
+}
+
+function quitarCategoriaSeleccionadaForm(categoriaId){
+  categoriasSeleccionadasForm = categoriasSeleccionadasForm.filter(id => id !== categoriaId);
+}
 
 //Lógica de productos
 async function cargarTodosLosProductos() {
@@ -243,7 +302,7 @@ async function cargarCategorias() {
     if (!respuesta.ok) {
       throw new Error("No hay respuesta del servidor de la API");
     }
-    const categorias = await respuesta.json();
+    categorias = await respuesta.json();
     mostrarCategorias([{ nombre: "all" }, ...categorias]);
   } catch (error) {
     console.error("Error al obtener las categorías:", error);
