@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de productos</title>
+</head>
+
+<body class="bg-stone-200 m-0 p-0 grid">
+    <header class="bg-emerald-500 p-2.5 flex justify-between items-center rounded-b-xl opacity-80">
+        <h1 class="text-left text-lg 
+            font-bold rounded-lg" id="panel-admin">Gestión de productos
+        </h1>
+        <nav>
+            <button id="btn-regresar" class="text-white text-lg font-medium bg-emerald-600 px-4 py-1 outline-none
+                        rounded-lg hover:bg-emerald-500 hover:shadow-md hover:shadow-emerald-600/50 
+                        transition-all duration-300 ease">🡠 Ir a página principal</button>
+        </nav>
+    </header>
+    <div class="flex flex-col items-center py-5 gap-6">
+        <h2 class="text-gray-600 py-2 px-6 bg-stone-200 rounded-md mx-auto mt-5 md:mt-8 
+                text-lg font-medium  border-x-4 border-stone-400">
+            Administre sus productos de forma rápida y sencilla...
+        </h2>
+        <button
+            class="text-white mx-auto text-base font-medium bg-cyan-600 px-4 py-1 outline-none rounded-lg hover:bg-cyan-500 hover:shadow-md hover:shadow-cyan-600/50 transition-all duration-300 ease">
+            Nuevo producto
+        </button>
+    </div>
+
+    <main class="max-w-7xl mx-auto flex flex-col items-center p-3 mt-5">
+        <div id="filtros" class="flex flex-col items-center w-full mb-10 mt-0 md:mt-4">
+            <input
+                class="py-2 px-4 rounded-lg border-2 border-cyan-600 w-2/3 md:w-1/2 outline-none focus:border-cyan-500"
+                placeholder="Buscar productos..." type="text" id="busqueda" />
+            <div class="flex items-center justify-center flex-wrap gap-3 mt-5" id="categorias"></div>
+        </div>
+
+        <div id="productos" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-0 md:gap-8"></div>
+    </main>
+    <script type="module" src="app.js">
+
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</body>
+
+</html>

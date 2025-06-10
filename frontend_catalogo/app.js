@@ -8,6 +8,7 @@ import {
 const contenedorProductos = document.getElementById("productos");
 const contenedorCategorias = document.getElementById("categorias");
 const entradaBusqueda = document.getElementById("busqueda");
+const panelAdmin = document.getElementById("panel-admin");
 const contenedorDetalleProducto = document.getElementById(
   "contenedor-detalle-producto"
 );
@@ -54,18 +55,27 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  if (panelAdmin && botonRegresar) {
+    botonRegresar.addEventListener("click", () => {
+      //Botón regresar de página de admin
+      location.href = "index.html";
+    });
+  }
   if (contenedorProductos && entradaBusqueda && contenedorCategorias) {
     //Catalogo de productos
     cargarTodosLosProductos();
     cargarCategorias();
     entradaBusqueda.addEventListener("input", filtrarProductos);
+
     //Lógica botón de cerrar sesión
     const botonCerrarSesion = document.getElementById("btn-cerrar-sesion");
-    botonCerrarSesion.addEventListener("click", () => {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("user_data");
-      location.href = "index.html";
-    });
+    if (botonCerrarSesion) {
+      botonCerrarSesion.addEventListener("click", () => {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user_data");
+        location.href = "index.html";
+      });
+    }
   }
   if (contenedorDetalleProducto && botonRegresar) {
     //Detalle de producto
@@ -75,7 +85,12 @@ document.addEventListener("DOMContentLoaded", () => {
       cargarProducto(productoId);
       botonRegresar.addEventListener("click", () => {
         //Botón regresar de página de detalle de producto
-        location.href = "index.html#catalogo";
+        const userData = JSON.parse(localStorage.getItem("user_data"));
+        if (userData.rol === "admin") {
+          location.href = "admin.html#catalogo";
+        }else{
+          location.href = "index.html#catalogo";
+        }
       });
     }
   }
@@ -132,7 +147,7 @@ function mostrarProductos(listaProductos) {
   contenedorProductos.innerHTML = "";
   listaProductos.forEach((producto) => {
     const div = document.createElement("div");
-    div.className = `rounded-lg hover:shadow-lg px-2 md:px-8 py-3 m-2 bg-white flex flex-col 
+    div.className = `producto-card rounded-lg hover:shadow-lg px-2 md:px-8 py-3 m-2 bg-white flex flex-col 
         justify-evenly items-center transition-shadow 
         duration-200 ease-in-out relative`;
 
@@ -177,31 +192,37 @@ function mostrarProductos(listaProductos) {
 }
 
 //Cambiar imagenes de productos con firebase
-async function cambiarImagen(input, producto){
+async function cambiarImagen(input, producto) {
   const archivo = input.files[0];
-      if (!archivo || !archivo.type.startsWith("image/")){
-        alert("El archivo no es una imagen");
-        return;
-      } 
-      const imageUrl = await subirImagenFirebase(archivo, `img_producto_${producto.id}_${Date.now()}`);
-      if (imageUrl) {
-        const response = await fetch(`http://127.0.0.1:8000/api/productos/change-product-image/${producto.id}`,{
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("access_token")}`
-          },
-          body: JSON.stringify({
-            imagen: imageUrl
-          })
-        })
-        if (!response.ok) {
-          throw new Error("Error al cambiar la imagen");
-        }
-        alert("Imagen cambiada exitosamente");
-        location.reload();
-        location.href = "index.html#catalogo";
+  if (!archivo || !archivo.type.startsWith("image/")) {
+    alert("El archivo no es una imagen");
+    return;
+  }
+  const imageUrl = await subirImagenFirebase(
+    archivo,
+    `img_producto_${producto.id}_${Date.now()}`
+  );
+  if (imageUrl) {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/productos/change-product-image/${producto.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        body: JSON.stringify({
+          imagen: imageUrl,
+        }),
       }
+    );
+    if (!response.ok) {
+      throw new Error("Error al cambiar la imagen");
+    }
+    alert("Imagen cambiada exitosamente");
+    location.reload();
+    location.href = "index.html#catalogo";
+  }
 }
 
 async function subirImagenFirebase(archivo, nombre) {
@@ -272,27 +293,39 @@ function mostrarProducto(producto) {
                     relative place-items-center break-all sm:break-normal hyphens-auto`;
   div.innerHTML = `
   <div class="w-full flex justify-center items-center">
-    <img src="${producto.imagen}" alt="${producto.titulo}" class="object-contain w-full md:w-96 md:h-96 rounded-2xl shadow-2xl border" loading="lazy">
+    <img src="${producto.imagen}" alt="${
+    producto.titulo
+  }" class="object-contain w-full md:w-96 md:h-96 rounded-2xl shadow-2xl border" loading="lazy">
   </div>
   <div class="flex flex-col justify-center items-start space-y-4 px-4 md:px-8">
-    <h2 class="font-bold text-2xl md:text-3xl text-sky-700">${producto.titulo}</h2>
+    <h2 class="font-bold text-2xl md:text-3xl text-sky-700">${
+      producto.titulo
+    }</h2>
     <h3 class="text-xl text-green-600 font-semibold">$${producto.precio}</h3>
     
     <div>
       <p class="text-lg font-medium text-gray-800">Descripción:</p>
-      <p class="text-base text-gray-600 leading-relaxed">${producto.descripcion}</p>
+      <p class="text-base text-gray-600 leading-relaxed">${
+        producto.descripcion
+      }</p>
     </div>
     
-    <p class="text-base text-indigo-700 font-semibold bg-indigo-100 px-4 py-2 rounded-lg">Stock: ${producto.stock}</p>
+    <p class="text-base text-indigo-700 font-semibold bg-indigo-100 px-4 py-2 rounded-lg">Stock: ${
+      producto.stock
+    }</p>
     
     <div class="flex flex-wrap gap-2 items-center">
       <p class="font-medium text-gray-700">Categorías:</p>
-      ${producto.categorias.map(cat => `
+      ${producto.categorias
+        .map(
+          (cat) => `
         <span class="bg-emerald-100 text-emerald-700 font-semibold px-3 py-1 rounded-full shadow-sm text-sm">${cat.nombre}</span>
-      `).join("")}
+      `
+        )
+        .join("")}
     </div>
     
-    <button class="btn-agregar-carrito bg-sky-600 hover:bg-sky-700 hover:scale-105 transition-transform 
+    <button data-role="cliente" class="hidden btn-agregar-carrito bg-sky-600 hover:bg-sky-700 hover:scale-105 transition-transform 
       duration-200 text-white text-sm md:text-base 2xl:text-xl font-bold py-2 px-6 rounded-lg shadow-md text-lg">
       🛒 Agregar al carrito
     </button>
@@ -304,7 +337,7 @@ function mostrarProducto(producto) {
 
 //Lógica para desbloquear controles según rol
 function desbloquearControles() {
-  if(!localStorage.getItem("user_data")) return;
+  if (!localStorage.getItem("user_data")) return;
   const userData = JSON.parse(localStorage.getItem("user_data"));
   document.querySelectorAll("[data-role]").forEach((elemento) => {
     if (elemento.dataset.role === userData.rol) {
