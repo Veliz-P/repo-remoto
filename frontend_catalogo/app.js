@@ -13,8 +13,12 @@ const btnCerrarFomulario = document.getElementById("cerrar-formulario");
 const formularioProducto = document.getElementById("formulario-producto");
 const btnCrearProducto = document.getElementById("crear-producto");
 const overlay = document.getElementById("overlay");
-const contenedorCategoriasSeleccionadas = document.getElementById("categorias-seleccionadas");
-const contenedorDetalleProducto = document.getElementById("contenedor-detalle-producto");
+const contenedorCategoriasSeleccionadas = document.getElementById(
+  "categorias-seleccionadas"
+);
+const contenedorDetalleProducto = document.getElementById(
+  "contenedor-detalle-producto"
+);
 const ventanaConfirmacion = document.getElementById("ventana-confirmacion");
 const idProductoEliminar = document.getElementById("id-producto-eliminar");
 
@@ -91,8 +95,8 @@ document.addEventListener("DOMContentLoaded", () => {
     //Lógica botón de cerrar sesión
     const botonCerrarSesion = document.getElementById("btn-cerrar-sesion");
     if (botonCerrarSesion) {
-      botonCerrarSesion.addEventListener("click", () => {
-        logout();
+      botonCerrarSesion.addEventListener("click", async () => {
+        await logout();
       });
     }
   }
@@ -102,9 +106,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const productoId = urlParams.get("id");
     if (productoId) {
       cargarProducto(productoId);
-      botonRegresar.addEventListener("click", () => {
-        //Botón regresar de página de detalle de producto
-        const userData = JSON.parse(localStorage.getItem("user_data"));
+      botonRegresar.addEventListener("click", async () => {
+        const userData = await me();
         if (userData.rol === "admin") {
           location.href = "admin.html#catalogo";
         } else {
@@ -120,7 +123,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-
   if (btnCerrarFomulario && formularioProducto && btnCrearProducto) {
     btnCrearProducto.addEventListener("click", async () => {
       modoFormulario = "crear";
@@ -131,21 +133,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const btnGuardarProducto = document.getElementById("guardar-producto");
-      btnGuardarProducto.addEventListener("click", async (e) => {
-        e.preventDefault();
-        switch(modoFormulario){
-          case "crear":
-            await crearProducto();
-            break;
-          case "actualizar":
-            await actualizarProducto();
-            break;
-        }
-        limpiarFormularioProducto();
-        overlay.classList.add("hidden");
-        formularioProducto.classList.add("hidden");
-        location.reload();
-      })
+    btnGuardarProducto.addEventListener("click", async (e) => {
+      e.preventDefault();
+      switch (modoFormulario) {
+        case "crear":
+          await crearProducto();
+          break;
+        case "actualizar":
+          await actualizarProducto();
+          break;
+      }
+      limpiarFormularioProducto();
+      overlay.classList.add("hidden");
+      formularioProducto.classList.add("hidden");
+      location.reload();
+    });
 
     btnCerrarFomulario.addEventListener("click", () => {
       overlay.classList.add("hidden");
@@ -159,11 +161,14 @@ document.addEventListener("DOMContentLoaded", () => {
 function agregarCategoriaSeleccionadaForm(categoriaId) {
   if (categoriaId && !categoriaFormAgregada(categoriaId)) {
     categoriasSeleccionadasForm.push(categoriaId);
-    const categoria = categorias.find(cat => cat.id === parseInt(categoriaId));
+    const categoria = categorias.find(
+      (cat) => cat.id === parseInt(categoriaId)
+    );
     if (categoria) {
       const span = document.createElement("span");
       span.textContent = categoria.nombre;
-      span.className = "bg-green-400 text-white px-4 pr-8 py-2 mr-3 rounded relative";
+      span.className =
+        "bg-green-400 text-white px-4 pr-8 py-2 mr-3 rounded relative";
       contenedorCategoriasSeleccionadas.appendChild(span);
       const button = document.createElement("button");
       button.textContent = "X";
@@ -177,16 +182,17 @@ function agregarCategoriaSeleccionadaForm(categoriaId) {
       });
       span.appendChild(button);
     }
-
   }
 }
 
 function categoriaFormAgregada(categoriaId) {
-  return categoriasSeleccionadasForm.some(id => id === categoriaId);
+  return categoriasSeleccionadasForm.some((id) => id === categoriaId);
 }
 
 function quitarCategoriaSeleccionadaForm(categoriaId) {
-  categoriasSeleccionadasForm = categoriasSeleccionadasForm.filter(id => id !== categoriaId);
+  categoriasSeleccionadasForm = categoriasSeleccionadasForm.filter(
+    (id) => id !== categoriaId
+  );
 }
 
 function limpiarFormularioProducto() {
@@ -207,9 +213,12 @@ async function crearProducto() {
   const descripcion = productoDescripcion.value;
   const imagen = productoImagen.files[0];
   let imageUrl = "";
-  if (!titulo|| !precio|| !descripcion || !stock) return
+  if (!titulo || !precio || !descripcion || !stock) return;
   if (imagen) {
-    imageUrl = await subirImagenFirebase(imagen, `img_producto_${titulo}_${Date.now()}`);
+    imageUrl = await subirImagenFirebase(
+      imagen,
+      `img_producto_${titulo}_${Date.now()}`
+    );
   }
 
   try {
@@ -225,8 +234,8 @@ async function crearProducto() {
         stock,
         descripcion,
         categorias: categoriasSeleccionadasForm,
-        imagen: imageUrl
-      })
+        imagen: imageUrl,
+      }),
     });
     if (!response.ok) {
       throw new Error("Error al crear el producto");
@@ -236,7 +245,6 @@ async function crearProducto() {
     alert("Error al crear el producto");
     console.error(error);
   }
-
 }
 
 async function actualizarProducto() {
@@ -248,10 +256,12 @@ async function actualizarProducto() {
   let imageUrl = productoImgUrl.value;
   const archivoImagen = productoImagen.files[0];
 
-  
-  if (!titulo || !precio || !descripcion || !stock) return
+  if (!titulo || !precio || !descripcion || !stock) return;
   if (archivoImagen) {
-    imageUrl = await subirImagenFirebase(archivoImagen, `img_producto_${titulo}_${Date.now()}`);
+    imageUrl = await subirImagenFirebase(
+      archivoImagen,
+      `img_producto_${titulo}_${Date.now()}`
+    );
   }
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/productos/${id}`, {
@@ -260,16 +270,14 @@ async function actualizarProducto() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
-      body: JSON.stringify(
-        {
-          titulo,
-          precio,
-          stock,
-          descripcion,
-          categorias: categoriasSeleccionadasForm,
-          imagen: imageUrl
-        }
-      )
+      body: JSON.stringify({
+        titulo,
+        precio,
+        stock,
+        descripcion,
+        categorias: categoriasSeleccionadasForm,
+        imagen: imageUrl,
+      }),
     });
     if (!response.ok) {
       throw new Error("Error al actualizar el producto");
@@ -281,27 +289,32 @@ async function actualizarProducto() {
   }
 }
 
-async function eliminarProducto(productoId){
-  try{
-    const response = await fetch(`http://127.0.0.1:8000/api/productos/${productoId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+async function eliminarProducto(productoId) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/productos/${productoId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
       }
-    });
-    if(!response.ok){
+    );
+    if (!response.ok) {
       throw new Error("Error al eliminar el producto");
     }
     alert("Producto eliminado exitosamente");
-  }catch(error){
+  } catch (error) {
     alert("Error al eliminar el producto");
     console.error(error);
   }
 }
 
 function cargarCategoriasDisponiblesFormulario() {
-  const categoriasFormularioSelect = document.getElementById("categorias-formulario");
+  const categoriasFormularioSelect = document.getElementById(
+    "categorias-formulario"
+  );
   categoriasFormularioSelect.innerHTML = "";
   categoriasFormularioSelect.innerHTML = "";
   categorias.forEach((cat) => {
@@ -309,7 +322,7 @@ function cargarCategoriasDisponiblesFormulario() {
     option.value = cat.id;
     option.textContent = cat.nombre;
     categoriasFormularioSelect.appendChild(option);
-  })
+  });
   categoriasFormularioSelect.addEventListener("change", (e) => {
     agregarCategoriaSeleccionadaForm(e.target.value);
     console.log(categoriasSeleccionadasForm);
@@ -319,7 +332,7 @@ function cargarCategoriasDisponiblesFormulario() {
 function cargarCategoriasSeleccionadas(categoriasProducto) {
   categoriasProducto.forEach((cat) => {
     agregarCategoriaSeleccionadaForm(cat.id);
-  })
+  });
 }
 
 function cargarDatosActualizacion(producto) {
@@ -334,8 +347,6 @@ function cargarDatosActualizacion(producto) {
     cargarCategoriasDisponiblesFormulario();
   }
 }
-
-
 
 //Lógica de productos
 async function cargarTodosLosProductos() {
@@ -398,7 +409,11 @@ function mostrarProductos(listaProductos) {
     div.querySelector(".btn-detalle-producto").addEventListener("click", () => {
       window.location.href = `detalle.html?id=${producto.id}`;
     });
-    const inputFile = document.createElement("input");
+
+
+    const userData = JSON.parse(localStorage.getItem("user_data"));
+    if(localStorage.getItem("user_data") && userData.rol === "admin" ){
+      const inputFile = document.createElement("input");
     inputFile.type = "file";
     inputFile.accept = "image/*";
     inputFile.className = "hidden";
@@ -423,31 +438,32 @@ function mostrarProductos(listaProductos) {
     div.appendChild(botonFile);
 
     const divControls = document.createElement("div");
-    divControls.className = `flex flex-wrap gap-3 mt-5 items-center`
+    divControls.className = `flex flex-wrap gap-3 mt-5 items-center`;
     divControls.innerHTML = `
       <button id="producto-${producto.id}" class="border bg-indigo-200 text-indigo-700 hover:bg-indigo-300 py-2 font-medium text-sm
         border-indigo-500 px-3 rounded-xl hover:shadow-lg transition-all duration-200 ease-in-out outline-none">Editar</button>
 
       <button id="eliminar-producto-${producto.id}" class="border bg-red-200 text-red-700 hover:bg-red-300 py-2 font-medium text-sm
-        border-red-500 px-3 rounded-xl hover:shadow-lg transition-all duration-200 ease-in-out outline-none">Eliminar</button>`
-
+        border-red-500 px-3 rounded-xl hover:shadow-lg transition-all duration-200 ease-in-out outline-none">Eliminar</button>`;
 
     const botonEditar = divControls.querySelector(`#producto-${producto.id}`);
     botonEditar.addEventListener("click", () => {
       modoFormulario = "actualizar";
       overlay.classList.remove("hidden");
-      formularioProducto.classList.remove("hidden"); 
+      formularioProducto.classList.remove("hidden");
       cargarDatosActualizacion(producto);
-    })
+    });
     div.appendChild(divControls);
 
-    const botonEliminar = divControls.querySelector(`#eliminar-producto-${producto.id}`);
+    const botonEliminar = divControls.querySelector(
+      `#eliminar-producto-${producto.id}`
+    );
     botonEliminar.addEventListener("click", () => {
       abrirVentanaConfirmacion();
       const botonConfirmar = document.getElementById("confirmar-eliminacion");
       const botonCancelar = document.getElementById("cancelar-eliminacion");
 
-      botonConfirmar.addEventListener("click", async () =>{
+      botonConfirmar.addEventListener("click", async () => {
         await eliminarProducto(producto.id);
         botonCancelar.click();
         location.reload();
@@ -457,14 +473,15 @@ function mostrarProductos(listaProductos) {
         overlay.classList.add("hidden");
         ventanaConfirmacion.classList.add("hidden");
         idProductoEliminar.value = "";
-      })
-    })
+      });
+    });
+    }
 
     contenedorProductos.appendChild(div);
   });
 }
 
-function abrirVentanaConfirmacion(){
+function abrirVentanaConfirmacion() {
   overlay.classList.remove("hidden");
   ventanaConfirmacion.classList.remove("hidden");
 }
@@ -536,9 +553,10 @@ function mostrarCategorias(categorias) {
         : cat.nombre.charAt(0).toUpperCase() + cat.nombre.slice(1);
     boton.className = `bg-slate-400 font-semibold px-8 py-1 rounded-full text-sm md:text-lg
       hover:bg-slate-600 hover:text-white shadow-xl 
-      transition-colors duration-200 ease-in-out ${categoriaSeleccionada === cat.nombre
-        ? " text-white bg-slate-600"
-        : " text-black bg-slate-400"
+      transition-colors duration-200 ease-in-out ${
+        categoriaSeleccionada === cat.nombre
+          ? " text-white bg-slate-600"
+          : " text-black bg-slate-400"
       }`;
     boton.addEventListener("click", () => {
       categoriaSeleccionada = cat.nombre;
@@ -569,32 +587,36 @@ function mostrarProducto(producto) {
                     relative place-items-center break-all sm:break-normal hyphens-auto`;
   div.innerHTML = `
   <div class="w-full flex justify-center items-center">
-    <img src="${producto.imagen}" alt="${producto.titulo
-    }" class="object-contain w-full md:w-96 md:h-96 rounded-2xl shadow-2xl border" loading="lazy">
+    <img src="${producto.imagen}" alt="${
+    producto.titulo
+  }" class="object-contain w-full md:w-96 md:h-96 rounded-2xl shadow-2xl border" loading="lazy">
   </div>
   <div class="flex flex-col justify-center items-start space-y-4 px-4 md:px-8">
-    <h2 class="font-bold text-2xl md:text-3xl text-sky-700">${producto.titulo
+    <h2 class="font-bold text-2xl md:text-3xl text-sky-700">${
+      producto.titulo
     }</h2>
     <h3 class="text-xl text-green-600 font-semibold">$${producto.precio}</h3>
     
     <div>
       <p class="text-lg font-medium text-gray-800">Descripción:</p>
-      <p class="text-base text-gray-600 leading-relaxed">${producto.descripcion
-    }</p>
+      <p class="text-base text-gray-600 leading-relaxed">${
+        producto.descripcion
+      }</p>
     </div>
     
-    <p class="text-base text-indigo-700 font-semibold bg-indigo-100 px-4 py-2 rounded-lg">Stock: ${producto.stock
+    <p class="text-base text-indigo-700 font-semibold bg-indigo-100 px-4 py-2 rounded-lg">Stock: ${
+      producto.stock
     }</p>
     
     <div class="flex flex-wrap gap-2 items-center">
       <p class="font-medium text-gray-700">Categorías:</p>
       ${producto.categorias
-      .map(
-        (cat) => `
+        .map(
+          (cat) => `
         <span class="bg-emerald-100 text-emerald-700 font-semibold px-3 py-1 rounded-full shadow-sm text-sm">${cat.nombre}</span>
       `
-      )
-      .join("")}
+        )
+        .join("")}
     </div>
     
     <button data-role="cliente" class="hidden btn-agregar-carrito bg-sky-600 hover:bg-sky-700 hover:scale-105 transition-transform 
@@ -619,7 +641,7 @@ function desbloquearControles() {
   });
 }
 
-async function logout(){
+async function logout() {
   try {
     const response = await fetch("http://127.0.0.1:8000/api/logout", {
       method: "POST",
@@ -636,5 +658,26 @@ async function logout(){
     window.location.href = "index.html";
   } catch (error) {
     console.log("Error al cerrar sesión:", error);
+  }
+}
+
+async function me() {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/api/me", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Error al obtener los datos del usuario");
+    }
+    const data = await response.json();
+    localStorage.setItem("user_data", JSON.stringify(data));
+    return data;
+  } catch (error) {
+    console.log("Error al obtener los datos del usuario:", error);
+    return [];
   }
 }
