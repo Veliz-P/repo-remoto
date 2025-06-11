@@ -55,6 +55,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await response.json();
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("user_data", JSON.stringify(data.user));
+        if(data.user.rol === "admin") {
+          window.location.href = "admin.html";
+        }
 
         mensaje.textContent = "Inicio de sesión exitoso ✔️​";
         mensaje.classList.add("text-green-500");
@@ -134,6 +137,13 @@ document.addEventListener("DOMContentLoaded", () => {
         agregarCategoriaSeleccionadaForm(e.target.value);
         console.log(categoriasSeleccionadasForm);
       });
+
+      const btnGuardarProducto = document.getElementById("guardar-producto");
+      btnGuardarProducto.addEventListener("click", async (e) => {
+        e.preventDefault();
+        await crearProducto();
+        location.reload();
+      })
     });
 
     btnCerrarFomulario.addEventListener("click", () => {
@@ -152,8 +162,19 @@ function agregarCategoriaSeleccionadaForm(categoriaId){
     if(categoria){
       const span = document.createElement("span");
       span.textContent = categoria.nombre;
-      span.classList.add("bg-green-400", "text-white", "px-2", "py-1", "mr-2", "rounded");
+      span.className = "bg-green-400 text-white px-4 pr-8 py-2 mr-3 rounded relative";
       contenedorCategoriasSeleccionadas.appendChild(span);
+      const button =  document.createElement("button");
+      button.textContent = "X";
+      button.className = `bg-red-400 text-white text-sm font-semibold py-1 px-2 rounded-full 
+      absolute right-1 top-1/2 translate-y-[-50%]`;
+      
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        quitarCategoriaSeleccionadaForm(categoriaId);
+        contenedorCategoriasSeleccionadas.removeChild(span);
+      });
+      span.appendChild(button);
     }
     
   }
@@ -176,6 +197,47 @@ function limpiarFormularioProducto() {
   productoStock.value = "";
   productoDescripcion.value = "";
 }
+
+async function crearProducto(){
+  const titulo = productoTitulo.value;
+  const precio = productoPrecio.value;
+  const stock = productoStock.value;
+  const descripcion = productoDescripcion.value;
+  const imagen = productoImagen.files[0];
+  let imageUrl = "";
+  if(!titulo, !precio,  !descripcion && !stock) return 
+  if(imagen){
+    imageUrl = await subirImagenFirebase(imagen, `img_producto_${titulo}_${Date.now()}`);
+  }
+
+  try{
+    const response = await fetch("http://127.0.0.1:8000/api/productos",{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,},
+      body: JSON.stringify({
+        titulo,
+        precio,
+        stock,
+        descripcion,
+        categorias: categoriasSeleccionadasForm,
+        imagen: imageUrl
+      })
+    });
+    if(!response.ok){
+      throw new Error("Error al crear el producto");
+    }
+    alert("Producto creado exitosamente");
+    limpiarFormularioProducto();
+    overlay.classList.add("hidden");
+    formularioProducto.classList.add("hidden");
+  }catch(error){
+    alert("Error al crear el producto:");
+  }
+
+}
+
 
 //Lógica de productos
 async function cargarTodosLosProductos() {
@@ -262,6 +324,23 @@ function mostrarProductos(listaProductos) {
     div.appendChild(inputFile);
     div.appendChild(botonFile);
 
+    const divControls = document.createElement("div");
+    divControls.className = `flex flex-wrap gap-3 mt-5 items-center`
+    divControls.innerHTML = `
+      <button id="producto-${producto.id}" class="border-x-4 bg-gray-200 hover:bg-gray-300 py-1 font-medium text-sm
+        border-indigo-500 px-3 rounded hover:shadow-lg transition-all duration-200 ease-in-out">Editar</button>
+      <button id="eliminar-producto" class="border-x-4 bg-gray-200 hover:bg-gray-300 py-1 font-medium text-sm
+        border-red-500 px-3 rounded hover:shadow-lg transition-all duration-200 ease-in-out">Eliminar</button>`
+      
+
+    const botonEditar = divControls.querySelector(`#producto-${producto.id}`);
+    botonEditar.addEventListener("click", () => {
+      modoFormulario = "actualizar";
+      overlay.classList.remove("hidden");
+      formularioProducto.classList.remove("hidden");
+    })
+    div.appendChild(divControls);
+
     contenedorProductos.appendChild(div);
   });
 }
@@ -296,7 +375,6 @@ async function cambiarImagen(input, producto) {
     }
     alert("Imagen cambiada exitosamente");
     location.reload();
-    location.href = "index.html#catalogo";
   }
 }
 

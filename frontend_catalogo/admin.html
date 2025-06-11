@@ -24,14 +24,14 @@
         <form class="flex flex-col gap-5">
             <div class="flex flex-col gap-1">
                 <label for="producto-titulo" class="text-sm font-medium text-gray-700">Título:</label>
-                <input type="text" id="producto-titulo" name="titulo" placeholder="Nombre del producto"
+                <input type="text" id="producto-titulo" name="titulo" required placeholder="Nombre del producto"
                     class="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:border-blue-500
                         focus:ring-1 focus:ring-blue-500 text-gray-800 text-sm md:text-base" />
             </div>
 
             <div class="flex flex-col gap-1">
                 <label for="producto-descripcion" class="text-sm font-medium text-gray-700">Descripción:</label>
-                <textarea id="producto-descripcion" name="descripcion" rows="4" placeholder="Descripción del producto"
+                <textarea id="producto-descripcion" name="descripcion" rows="4" required placeholder="Descripción del producto"
                     class="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none 
                     focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-800
                     text-sm md:text-base"></textarea>
@@ -41,7 +41,7 @@
                 <label for="producto-precio" class="text-sm font-medium text-gray-700">Precio</label>
                 <div class="relative">
                     <span class="absolute left-3 top-2 text-gray-500">$</span>
-                    <input type="number" id="producto-precio" name="precio" step="0.01" min="0" placeholder="0.00"
+                    <input type="number" id="producto-precio" name="precio" required step="0.01" placeholder="0.00"
                         class="border border-gray-300 pl-8 pr-4 py-2 w-full rounded-lg focus:outline-none 
                         focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-800
                         text-sm md:text-base" />
@@ -81,7 +81,7 @@
 
             <div class="mt-2">
                 <button type="submit"
-                    id="btn-guardar-producto"
+                    id="guardar-producto"
                     class="w-full bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700 transition font-medium shadow-sm">
                     Guardar
                 </button>
@@ -102,7 +102,7 @@
         </nav>
     </header>
     <div class="flex flex-col items-center py-5 gap-6">
-        <h2 class="text-gray-600 py-2 px-6 bg-stone-200 rounded-md mx-auto mt-5 md:mt-8 
+        <h2 class="text-gray-700 py-2 px-6 bg-stone-200 rounded-md mx-auto mt-5 md:mt-8 
                 text-lg font-medium  border-x-4 border-stone-400">
             Administre sus productos de forma rápida y sencilla...
         </h2>
