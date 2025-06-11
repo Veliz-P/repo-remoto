@@ -92,9 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const botonCerrarSesion = document.getElementById("btn-cerrar-sesion");
     if (botonCerrarSesion) {
       botonCerrarSesion.addEventListener("click", () => {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("user_data");
-        location.href = "index.html";
+        logout();
       });
     }
   }
@@ -619,4 +617,24 @@ function desbloquearControles() {
       elemento.classList.add("block");
     }
   });
+}
+
+async function logout(){
+  try {
+    const response = await fetch("http://127.0.0.1:8000/api/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Error al cerrar sesión");
+    }
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user_data");
+    window.location.href = "index.html";
+  } catch (error) {
+    console.log("Error al cerrar sesión:", error);
+  }
 }
