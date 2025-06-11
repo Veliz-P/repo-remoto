@@ -9,6 +9,22 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    public function index()
+    {
+        // Verifica que el usuario sea admin
+        if (auth()->user()->rol !== 'admin') {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
+        // Retorna todos los usuarios
+        return User::all();
+    }
+
+    public function me(Request $request)
+    {
+        return response()->json($request->user());
+    }
+
+
     public function register(Request $request){
         $validated = $request->validate([
             'name' => 'required|string|max:255',
