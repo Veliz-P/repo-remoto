@@ -15,6 +15,8 @@ const btnCrearProducto = document.getElementById("crear-producto");
 const overlay = document.getElementById("overlay");
 const contenedorCategoriasSeleccionadas = document.getElementById("categorias-seleccionadas");
 const contenedorDetalleProducto = document.getElementById("contenedor-detalle-producto");
+const ventanaConfirmacion = document.getElementById("ventana-confirmacion");
+const idProductoEliminar = document.getElementById("id-producto-eliminar");
 
 //Campos del formulario
 const productoId = document.getElementById("producto-id");
@@ -128,20 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
       formularioProducto.classList.remove("hidden");
       cargarCategorias();
       cargarCategoriasDisponiblesFormulario();
-      /*
-      const categoriasFormularioSelect = document.getElementById("categorias-formulario");
-      categoriasFormularioSelect.innerHTML = "";
-      categorias.forEach((cat)=>{
-        const option = document.createElement("option");
-        option.value = cat.id;
-        option.textContent = cat.nombre;
-        categoriasFormularioSelect.appendChild(option);
-      })
-      categoriasFormularioSelect.addEventListener("change", (e) => {
-        agregarCategoriaSeleccionadaForm(e.target.value);
-        console.log(categoriasSeleccionadasForm);
-      });
-      */
     });
 
     const btnGuardarProducto = document.getElementById("guardar-producto");
@@ -155,8 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
             await actualizarProducto();
             break;
         }
-        
-        
         limpiarFormularioProducto();
         overlay.classList.add("hidden");
         formularioProducto.classList.add("hidden");
@@ -249,7 +235,8 @@ async function crearProducto() {
     }
     alert("Producto creado exitosamente");
   } catch (error) {
-    alert("Error al crear el producto:");
+    alert("Error al crear el producto");
+    console.error(error);
   }
 
 }
@@ -292,6 +279,26 @@ async function actualizarProducto() {
     alert("Producto actualizado exitosamente");
   } catch (error) {
     alert("Error al actualizar el producto:");
+    console.error(error);
+  }
+}
+
+async function eliminarProducto(productoId){
+  try{
+    const response = await fetch(`http://127.0.0.1:8000/api/productos/${productoId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      }
+    });
+    if(!response.ok){
+      throw new Error("Error al eliminar el producto");
+    }
+    alert("Producto eliminado exitosamente");
+  }catch(error){
+    alert("Error al eliminar el producto");
+    console.error(error);
   }
 }
 
@@ -423,7 +430,7 @@ function mostrarProductos(listaProductos) {
       <button id="producto-${producto.id}" class="border bg-indigo-200 text-indigo-700 hover:bg-indigo-300 py-2 font-medium text-sm
         border-indigo-500 px-3 rounded-xl hover:shadow-lg transition-all duration-200 ease-in-out outline-none">Editar</button>
 
-      <button id="eliminar-producto" class="border bg-red-200 text-red-700 hover:bg-red-300 py-2 font-medium text-sm
+      <button id="eliminar-producto-${producto.id}" class="border bg-red-200 text-red-700 hover:bg-red-300 py-2 font-medium text-sm
         border-red-500 px-3 rounded-xl hover:shadow-lg transition-all duration-200 ease-in-out outline-none">Eliminar</button>`
 
 
@@ -436,8 +443,32 @@ function mostrarProductos(listaProductos) {
     })
     div.appendChild(divControls);
 
+    const botonEliminar = divControls.querySelector(`#eliminar-producto-${producto.id}`);
+    botonEliminar.addEventListener("click", () => {
+      abrirVentanaConfirmacion();
+      const botonConfirmar = document.getElementById("confirmar-eliminacion");
+      const botonCancelar = document.getElementById("cancelar-eliminacion");
+
+      botonConfirmar.addEventListener("click", async () =>{
+        await eliminarProducto(producto.id);
+        botonCancelar.click();
+        location.reload();
+      });
+
+      botonCancelar.addEventListener("click", () => {
+        overlay.classList.add("hidden");
+        ventanaConfirmacion.classList.add("hidden");
+        idProductoEliminar.value = "";
+      })
+    })
+
     contenedorProductos.appendChild(div);
   });
+}
+
+function abrirVentanaConfirmacion(){
+  overlay.classList.remove("hidden");
+  ventanaConfirmacion.classList.remove("hidden");
 }
 
 //Cambiar imagenes de productos con firebase
