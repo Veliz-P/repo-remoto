@@ -51,21 +51,29 @@ class ProductoController extends Controller
         
     }
 
-    public function update(Request $request, Producto $producto)
+    public function update(Request $request, $id)
     {
+        $producto = Producto::findOrFail($id);
+
         $validatedData = $request->validate([
             'titulo' => 'sometimes|required|string|max:255',
             'descripcion' => 'sometimes|required|string',
             'precio' => 'sometimes|required|numeric|min:0',
+            'stock'=> 'required|integer|min:0',
             'imagen' => 'nullable|string',
             'categorias' => 'nullable|array',
+            'categorias.*' => 'exists:categorias,id',
         ]);
+
         $producto->update($validatedData);
+
         if ($request->has('categorias')) {
             $producto->categorias()->sync($request->categorias);
         }
-        return response()->json($producto,200);
+
+        return response()->json($producto, 200);
     }
+
 
     public function destroy($id)
     {
