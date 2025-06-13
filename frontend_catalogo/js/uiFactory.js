@@ -62,7 +62,25 @@ const createDetailCard = (product, container) => {
   container.appendChild(div);
 }
 
+
+const createCategoriesButtons = (categories, container) => {
+  container.innerHTML = "";
+  categories.forEach(cat => {
+    const boton = document.createElement("button");
+    boton.textContent = cat.nombre === "all" 
+      ? "Todos" 
+      : cat.nombre.charAt(0).toUpperCase() + cat.nombre.slice(1);
+    boton.value = cat.nombre; //new feature: set value to category id
+    boton.className = `btn-categoria bg-slate-400 font-semibold px-8 py-1 rounded-full text-sm md:text-lg
+      hover:bg-slate-600 hover:text-white shadow-xl 
+      transition-colors duration-200 ease-in-out`;
+    container.appendChild(boton);
+  });
+}
+
+
 export const uiFactory = {
   createProductsCards,
   createDetailCard,
+  createCategoriesButtons
 };

@@ -68,6 +68,13 @@
       </p>
     </footer>
     <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const btnRegresar = document.getElementById("btn-regresar");
+        btnRegresar.addEventListener("click", () => {
+          window.location.href = "index.html";
+        });
+      });
+
       function initMap() {
         const location = { lat: -0.2196766, lng: -78.5159946 };
         const map = new google.maps.Map(document.getElementById("map"), {
@@ -82,7 +89,6 @@
         });
       }
     </script>
-    <script type="module" src="app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&callback=initMap" async defer></script>
   </body>
