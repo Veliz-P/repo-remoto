@@ -28,7 +28,34 @@
       </p>
     </footer>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="app.js"></script>
+    
+
+    <script type="module">
+      import {productService} from "./js/productService.js";
+      import {uiFactory} from "./js/uiFactory.js";
+      import {authService} from "./js/authService.js";
+      const btnRegresar = document.getElementById("btn-regresar");
+      document.addEventListener("DOMContentLoaded", async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+        if (productId) {
+          try {
+            const producto = await productService.getProductById(productId);
+            uiFactory.createDetailCard(producto, document.getElementById("contenedor-detalle-producto"));
+          } catch (error) {
+            console.error("Error al cargar el producto:", error);
+          }
+        }
+        btnRegresar.addEventListener("click", () => {
+          const userData = JSON.parse(localStorage.getItem("user_data")) ;
+          if(userData && userData.rol === "admin") {
+            window.location.href = "admin.html"; 
+          }else{
+            window.location.href = "index.html"; 
+          }
+        });
+      });
+    </script>
   </body>
   
 </html>

@@ -47,7 +47,8 @@ const getProductById = async (id) => {
     if (!response.ok) throw new Error("Error al obtener el producto");
     product = await response.json();
   } catch (error) {
-    console.error("Error al obtener el producto:", error);
+    alert("Error al obtener el producto");
+    console.error(error);
   }
   return product;
 };
