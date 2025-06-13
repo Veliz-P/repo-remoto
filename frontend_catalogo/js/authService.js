@@ -47,7 +47,7 @@ const logout = async () => {
 const me = async () => {
   let userData = null;
   try {
-    const response = await fetch(`${API_BASE_URL}/me}`, {
+    const response = await fetch(`${API_BASE_URL}/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
