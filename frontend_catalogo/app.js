@@ -1,4 +1,5 @@
 import storage from "./firebaseIntegration.js";
+import { authService } from "./js/authService.js";
 import {
   ref,
   uploadBytes,
@@ -41,10 +42,6 @@ let categoriasSeleccionadasForm = [];
 
 //Inicializar elementos del DOM
 document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm");
-  if (loginForm) { // Login de usuario
-    loginForm.addEventListener("submit", login);
-  }
 
   if (panelAdmin && botonRegresar) { //Panel administración
     botonRegresar.addEventListener("click", () => {
@@ -58,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     entradaBusqueda.addEventListener("input", filtrarProductos);
     const botonCerrarSesion = document.getElementById("btn-cerrar-sesion");
     if (botonCerrarSesion && localStorage.getItem("user_data")) {
-      botonCerrarSesion.addEventListener("click", logout);
+      botonCerrarSesion.addEventListener("click", authService.logout);
     }
   }
 
@@ -88,61 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //Funciones de autenticación
-async function login(e) {
-  e.preventDefault();
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const mensaje = document.getElementById("mensaje");
-  
-  try {
-    const response = await fetch("http://127.0.0.1:8000/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    
-    if (!response.ok) throw new Error("Error de conexión con la api");
-    
-    const data = await response.json();
-    localStorage.setItem("access_token", data.access_token);
-    localStorage.setItem("user_data", JSON.stringify(data.user));
-    
-    if (data.user.rol === "admin") {
-      window.location.href = "admin.html";
-    }
-
-    mensaje.textContent = "Inicio de sesión exitoso ✔️​";
-    mensaje.classList.add("text-green-500");
-    
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 2000);
-  } catch (error) {
-    console.error("Error al iniciar sesión:", error);
-    mensaje.textContent = "Error al iniciar sesión. Inténtalo de nuevo. ❌​";
-    mensaje.classList.add("text-red-500");
-  }
-}
-
-async function logout() {
-  try {
-    const response = await fetch("http://127.0.0.1:8000/api/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    });
-    
-    if (!response.ok) throw new Error("Error al cerrar sesión");
-    
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("user_data");
-    window.location.href = "index.html";
-  } catch (error) {
-    console.log("Error al cerrar sesión:", error);
-  }
-}
 
 async function me() {
   try {

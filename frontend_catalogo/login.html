@@ -43,6 +43,36 @@
       <p id="mensaje" class="text-center mt-8 text-sm font-medium"></p>
     </form>
 
-    <script type="module" src="app.js"></script>
+    <script type="module">
+      import { authService } from "./js/authService.js";
+      const loginForm = document.getElementById("loginForm");
+      const mensaje = document.getElementById("mensaje");
+
+      loginForm.addEventListener("submit", async (e) =>{
+        e.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        
+        try {
+          const userData = await authService.login(email, password);
+          if (!userData){
+            throw new Error("Usuario o contraseña incorrectos");
+          }
+          mensaje.textContent = `Inicio de sesión exitoso ✔️`;
+          mensaje.className = "text-green-500 text-center mt-4";
+          setTimeout(() => {
+            if (userData.rol === "admin") {
+              window.location.href = "admin.html";
+            } else {
+              window.location.href = "index.html"; 
+            }
+          }, 2000);
+
+        } catch (error) {
+          mensaje.textContent = "Error al iniciar sesión, intenta de nuevo ❌";
+          mensaje.className = "text-red-500 text-center mt-4";
+        }
+      });
+    </script>
   </body>
 </html>
