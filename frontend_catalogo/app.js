@@ -1,4 +1,5 @@
-import storage from "./firebaseIntegration.js";
+import { firebaseIntegration } from "./firebaseIntegration.js";
+//import storage  from "./firebaseIntegration.js";
 import { authService } from "./js/authService.js";
 import {
   ref,

@@ -1,145 +1,435 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestión de productos</title>
-</head>
+  </head>
 
-<body class="bg-stone-200 m-0 p-0 grid">
-    <div id="overlay" class="hidden fixed inset-0 bg-black bg-opacity-40 z-40"></div>
+  <body class="bg-stone-200 m-0 p-0 grid">
+    <div
+      id="overlay"
+      class="hidden fixed inset-0 bg-black bg-opacity-40 z-40"
+    ></div>
     <!-- Ventana de confirmación -->
-    <div id="ventana-confirmacion" class="hidden fixed top-1/3 md:top-1/2 left-1/2 transform -translate-x-1/2
-        -translate-y-1/2 bg-white p-6 rounded-xl shadow-xl z-50 mx-auto">
-        <h2 class="text-gray-700 font-semibold text-base md:text-lg">¿Está seguro de eliminar el producto?</h2>
-        <input type="text" id="id-producto-eliminar" class="hidden">
-        <div class="flex justify-end gap-4 mt-4">
-            <button id="confirmar-eliminacion" class="text-red-500 hover:text-red-700 hover:bg-gray-200
-            text-base md:text-lg font-medium transition-all duration-200 ease py-1 px-3 rounded">Si</button>
-            <button id="cancelar-eliminacion" class="text-gray-500 hover:text-red-500 hover:bg-gray-200
-            text-base md:text-lg font-medium transition-all duration-200 ease py-1 px-3 rounded">No</button>
-        </div>
+    <div
+      id="ventana-confirmacion"
+      class="hidden fixed top-1/3 md:top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-xl shadow-xl z-50 mx-auto"
+    >
+      <h2 class="text-gray-700 font-semibold text-base md:text-lg">
+        ¿Está seguro de eliminar el producto?
+      </h2>
+      <input type="text" id="id-producto-eliminar" class="hidden" />
+      <div class="flex justify-end gap-4 mt-4">
+        <button
+          id="confirmar-eliminacion"
+          class="text-red-500 hover:text-red-700 hover:bg-gray-200 text-base md:text-lg font-medium transition-all duration-200 ease py-1 px-3 rounded"
+        >
+          Si
+        </button>
+        <button
+          id="cancelar-eliminacion"
+          class="text-gray-500 hover:text-red-500 hover:bg-gray-200 text-base md:text-lg font-medium transition-all duration-200 ease py-1 px-3 rounded"
+        >
+          No
+        </button>
+      </div>
     </div>
 
     <!-- Formulario de producto -->
-    <div id="formulario-producto" class="hidden fixed top-1/2 left-1/2 transform 
-        -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-xl shadow-xl z-50 w-full max-w-md
-        overflow-y-auto max-h-[80vh] ">
-        <div class="sticky flex justify-between items-center mb-4 p-2 border-b ">
-            <h2 class="text-gray-800 font-semibold text-lg md:text-xl"> Datos de producto</h2>
-            <button id="cerrar-formulario" class="text-gray-500 hover:text-red-500
-            text-xl md:text-2xl font-bold transition-all duration-200 ease">×
-            </button>
+    <div
+      id="formulario-producto"
+      class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-xl shadow-xl z-50 w-full max-w-md overflow-y-auto max-h-[80vh]"
+    >
+      <div class="sticky flex justify-between items-center mb-4 p-2 border-b">
+        <h2 class="text-gray-800 font-semibold text-lg md:text-xl">
+          Datos de producto
+        </h2>
+        <button
+          id="cerrar-formulario"
+          class="text-gray-500 hover:text-red-500 text-xl md:text-2xl font-bold transition-all duration-200 ease"
+        >
+          ×
+        </button>
+      </div>
+
+      <form class="flex flex-col gap-5">
+        <input type="text" id="form-id" name="id" class="hidden">
+        <input type="text" id="producto-img-url" name="url" class="hidden" />
+        <div class="flex flex-col gap-1">
+          <label for="producto-titulo" class="text-sm font-medium text-gray-700"
+            >Título:</label
+          >
+          <input
+            type="text"
+            id="producto-titulo"
+            name="titulo"
+            required
+            placeholder="Nombre del producto"
+            class="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-800 text-sm md:text-base"
+          />
         </div>
 
-        <form class="flex flex-col gap-5">
-            <input type="text" id="producto-id" name="id" class="hidden">
-            <input type="text" id="producto-img-url" name="url" class="hidden">
-            <div class="flex flex-col gap-1">
-                <label for="producto-titulo" class="text-sm font-medium text-gray-700">Título:</label>
-                <input type="text" id="producto-titulo" name="titulo" required placeholder="Nombre del producto"
-                    class="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:border-blue-500
-                        focus:ring-1 focus:ring-blue-500 text-gray-800 text-sm md:text-base" />
-            </div>
+        <div class="flex flex-col gap-1">
+          <label
+            for="producto-descripcion"
+            class="text-sm font-medium text-gray-700"
+            >Descripción:</label
+          >
+          <textarea
+            id="producto-descripcion"
+            name="descripcion"
+            rows="4"
+            required
+            placeholder="Descripción del producto"
+            class="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-800 text-sm md:text-base"
+          ></textarea>
+        </div>
 
-            <div class="flex flex-col gap-1">
-                <label for="producto-descripcion" class="text-sm font-medium text-gray-700">Descripción:</label>
-                <textarea id="producto-descripcion" name="descripcion" rows="4" required placeholder="Descripción del producto"
-                    class="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none 
-                    focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-800
-                    text-sm md:text-base"></textarea>
-            </div>
+        <div class="flex flex-col gap-1">
+          <label for="producto-precio" class="text-sm font-medium text-gray-700"
+            >Precio</label
+          >
+          <div class="relative">
+            <span class="absolute left-3 top-2 text-gray-500">$</span>
+            <input
+              type="number"
+              id="producto-precio"
+              name="precio"
+              required
+              step="0.01"
+              placeholder="0.00"
+              class="border border-gray-300 pl-8 pr-4 py-2 w-full rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-800 text-sm md:text-base"
+            />
+          </div>
+        </div>
 
-            <div class="flex flex-col gap-1">
-                <label for="producto-precio" class="text-sm font-medium text-gray-700">Precio</label>
-                <div class="relative">
-                    <span class="absolute left-3 top-2 text-gray-500">$</span>
-                    <input type="number" id="producto-precio" name="precio" required step="0.01" placeholder="0.00"
-                        class="border border-gray-300 pl-8 pr-4 py-2 w-full rounded-lg focus:outline-none 
-                        focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-800
-                        text-sm md:text-base" />
-                </div>
-            </div>
+        <div class="flex flex-col gap-1">
+          <label for="producto-imagen" class="text-sm font-medium text-gray-700"
+            >Imagen</label
+          >
+          <input
+            type="file"
+            id="producto-imagen"
+            name="imagen"
+            class="file:hover:cursor-pointer hover:cursor-pointer border border-gray-300 px-4 py-2 rounded-lg file:mr-2 file:py-1 file:px-3 file:border-0 file:text-sm file:font-medium file:bg-gray-200 file:text-gray-800 file:rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-gray-800 text-sm md:text-base"
+          />
+        </div>
 
-            <div class="flex flex-col gap-1">
-                <label for="producto-imagen" class="text-sm font-medium text-gray-700">Imagen</label>
-                <input type="file" id="producto-imagen" name="imagen"
-                    class="file:hover:cursor-pointer hover:cursor-pointer border border-gray-300 px-4 py-2 rounded-lg file:mr-2 
-                    file:py-1 file:px-3 file:border-0 file:text-sm file:font-medium file:bg-gray-200 
-                    file:text-gray-800 file:rounded-lg focus:outline-none 
-                    focus:ring-1 focus:ring-blue-500 text-gray-800
-                    text-sm md:text-base" />
-            </div>
+        <div class="flex flex-col gap-1">
+          <label for="producto-stock" class="text-sm font-medium text-gray-700"
+            >Stock</label
+          >
+          <input
+            type="number"
+            id="producto-stock"
+            name="stock"
+            min="0"
+            placeholder="Cantidad disponible"
+            class="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-800 text-sm md:text-base"
+          />
+        </div>
 
-            <div class="flex flex-col gap-1">
-                <label for="producto-stock" class="text-sm font-medium text-gray-700">Stock</label>
-                <input type="number" id="producto-stock" name="stock" min="0" placeholder="Cantidad disponible"
-                    class="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none
-                        focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-800
-                        text-sm md:text-base" />
-            </div>
+        <div class="flex flex-col gap-1">
+          <label
+            for="categorias-formulario"
+            class="text-sm font-medium text-gray-700"
+            >Categorias:
+          </label>
+          <select
+            name=""
+            id="categorias-formulario"
+            class="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-800 text-sm md:text-base"
+          >
+            <option value="" disabled selected>Selecciona una opción</option>
+          </select>
+        </div>
 
-            <div class="flex flex-col gap-1">
-                <label for="categorias-formulario" class="text-sm font-medium text-gray-700">Categorias: </label>
-                <select name="" id="categorias-formulario" class="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none
-                        focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-800
-                        text-sm md:text-base">
-                    <option value="" disabled selected>Selecciona una opción</option>
-                </select>
-            </div>
+        <div
+          class="flex flex-wrap gap-x-1 gap-y-2"
+          id="contenedor-categorias-seleccionadas"
+        ></div>
 
-            <div class="flex flex-wrap gap-x-1 gap-y-2" id="categorias-seleccionadas">
-
-            </div>
-
-            <div class="mt-2">
-                <button type="submit"
-                    id="guardar-producto"
-                    class="w-full bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700 transition font-medium shadow-sm">
-                    Guardar
-                </button>
-            </div>
-
-        </form>
+        <div class="mt-2">
+          <button
+            type="submit"
+            id="guardar-producto"
+            class="w-full bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700 transition font-medium shadow-sm"
+          >
+            Guardar
+          </button>
+        </div>
+      </form>
     </div>
 
-
-    <header class="bg-emerald-500 p-2.5 flex justify-between items-center rounded-b-xl opacity-80">
-        <h1 class="text-left text-lg 
-            font-bold rounded-lg" id="panel-admin">Gestión de productos
-        </h1>
-        <nav>
-            <button id="btn-regresar" class="text-white text-lg font-medium bg-emerald-600 px-4 py-1 outline-none
-                        rounded-lg hover:bg-emerald-500 hover:shadow-md hover:shadow-emerald-600/50 
-                        transition-all duration-300 ease">🡠 Ir a página principal</button>
-        </nav>
+    <header
+      class="bg-emerald-500 p-2.5 flex justify-between items-center rounded-b-xl opacity-80"
+    >
+      <h1 class="text-left text-lg font-bold rounded-lg" id="panel-admin">
+        Gestión de productos
+      </h1>
+      <nav>
+        <button
+          id="btn-regresar"
+          class="text-white text-lg font-medium bg-emerald-600 px-4 py-1 outline-none rounded-lg hover:bg-emerald-500 hover:shadow-md hover:shadow-emerald-600/50 transition-all duration-300 ease"
+        >
+          🡠 Ir a página principal
+        </button>
+      </nav>
     </header>
     <div class="flex flex-col items-center py-5 gap-6">
-        <h2 class="text-gray-700 py-2 px-6 bg-stone-200 rounded-md mx-auto mt-5 md:mt-8 
-                text-lg font-medium  border-x-4 border-stone-400">
-            Administre sus productos de forma rápida y sencilla...
-        </h2>
-        <button id="crear-producto" data-role="admin"
-            class="hidden text-white mx-auto text-base font-medium bg-cyan-600 px-4 py-1 outline-none rounded-lg hover:bg-cyan-500 hover:shadow-md hover:shadow-cyan-600/50 transition-all duration-300 ease">
-            Nuevo producto
-        </button>
+      <h2
+        class="text-gray-700 py-2 px-6 bg-stone-200 rounded-md mx-auto mt-5 md:mt-8 text-lg font-medium border-x-4 border-stone-400"
+      >
+        Administre sus productos de forma rápida y sencilla...
+      </h2>
+      <button
+        id="crear-producto"
+        data-role="admin"
+        class="text-white mx-auto text-base font-medium bg-cyan-600 px-4 py-1 outline-none rounded-lg hover:bg-cyan-500 hover:shadow-md hover:shadow-cyan-600/50 transition-all duration-300 ease"
+      >
+        Nuevo producto
+      </button>
     </div>
 
     <main class="max-w-7xl mx-auto flex flex-col items-center p-3 mt-5">
-        <div id="filtros" class="flex flex-col items-center w-full mb-10 mt-0 md:mt-4">
-            <input
-                class="py-2 px-4 rounded-lg border-2 border-cyan-600 w-2/3 md:w-1/2 outline-none focus:border-cyan-500"
-                placeholder="Buscar productos..." type="text" id="busqueda" />
-            <div class="flex items-center justify-center flex-wrap gap-3 mt-5" id="categorias"></div>
-        </div>
-
-        <div id="productos" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-0 md:gap-8"></div>
+      <div
+        id="productos"
+        class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-0 md:gap-8"
+      ></div>
     </main>
-    <script type="module" src="app.js">
+    <script type="module">
+      import { productService } from "./js/productService.js";
+      import { uiFactory } from "./js/uiFactory.js";
+      const productosContainer = document.getElementById("productos");
+      const overlay = document.getElementById("overlay");
+      const productoForm = document.getElementById("formulario-producto");
+      const ventanaConfirmacion = document.getElementById("ventana-confirmacion");
+      const btnCrearProducto = document.getElementById("crear-producto");
+      const selectCategorias = document.getElementById("categorias-formulario");
+      const btnCerrarFormulario = document.getElementById("cerrar-formulario");
+      const contenedorCategoriasSeleccionadas = document.getElementById("contenedor-categorias-seleccionadas");
+      const btnGuardarProducto = document.getElementById("guardar-producto");
+      const btnRegresar = document.getElementById("btn-regresar");
+      
+
+      //Campos del formulario
+      const productoTitulo = document.getElementById("producto-titulo");
+      const productoDescripcion = document.getElementById("producto-descripcion");
+      const productoPrecio = document.getElementById("producto-precio");
+      const productoImagen = document.getElementById("producto-imagen");
+      const productoStock = document.getElementById("producto-stock");
+      const productoImgUrl = document.getElementById("producto-img-url");
+      const formId = document.getElementById("form-id");
+      
+      let productos = [];
+      let categoriasDisponibles = [];
+      let categoriasSeleccionadasIds = [];
+      let modoForm = "create"; // 'create' or 'edit'
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        productos = await productService.getAllProducts();
+        categoriasDisponibles = await productService.getAllCategories();
+        uiFactory.createProductsCards(productos, productosContainer);
+        btnRegresar.addEventListener("click", () => {
+          window.location.href = "index.html";
+        });
+        initAdminControls();
+      });
+
+      function initAdminControls() {
+        btnCrearProducto.addEventListener("click", openProductForm);
+        btnCerrarFormulario.addEventListener("click", closeProductForm);
+        btnGuardarProducto.addEventListener("click", saveFormData);
+
+        const productoCards = document.querySelectorAll(".producto-card");
+        productoCards.forEach((card) => {
+          const productId = card.querySelector("#producto-id").value;
+          const productData = productos.find(
+            (p) => p.id === parseInt(productId)
+          );
+          const inputFile = document.createElement("input");
+          inputFile.type = "file";
+          inputFile.accept = "image/*";
+          inputFile.className = "hidden";
+
+          const botonFile = document.createElement("button");
+          botonFile.textContent = "Cambiar imagen";
+          botonFile.setAttribute("data-role", "admin");
+          botonFile.className = ` w-full mt-4 px-4 py-2 rounded-xl border border-blue-500 bg-blue-100 text-blue-800 
+            font-semibold text-sm hover:bg-blue-200 hover:text-blue-900 transition duration-300 ease-in-out
+            shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300`;
+
+          botonFile.addEventListener("click", () => inputFile.click());
+          inputFile.addEventListener("change", () =>
+            productService.changeProductImg(inputFile.files[0], productData)
+          );
+          card.appendChild(botonFile);
+
+          const editDeleteContainer = document.createElement("div");
+          editDeleteContainer.className = `flex flex-wrap gap-3 mt-5 items-center`;
+          editDeleteContainer.innerHTML = `
+            <button id="producto-${productData.id}" class="border bg-indigo-200 text-indigo-700 hover:bg-indigo-300 py-2 font-medium text-sm
+            border-indigo-500 px-3 rounded-xl hover:shadow-lg transition-all duration-200 ease-in-out outline-none">Editar</button>
+
+            <button id="eliminar-producto-${productData.id}" class="border bg-red-200 text-red-700 hover:bg-red-300 py-2 font-medium text-sm
+            border-red-500 px-3 rounded-xl hover:shadow-lg transition-all duration-200 ease-in-out outline-none">Eliminar</button>`;
+            
+          const btnEdit = editDeleteContainer.querySelector(`#producto-${productData.id}`);
+          btnEdit.addEventListener("click", async () => {
+            openProductForm(productData)
+            modoForm = "edit";
+            loadDataIntoForm(productData);
+            formId.value = productData.id;
+            productoImgUrl.value = productData.imagen;
+          });
+
+          const btnDelete = editDeleteContainer.querySelector(`#eliminar-producto-${productData.id}`);
+          btnDelete.addEventListener("click", () => {
+            ventanaConfirmacion.classList.remove("hidden");
+            overlay.classList.remove("hidden");
+            const idProductoEliminar = document.getElementById("id-producto-eliminar");
+            idProductoEliminar.value = productData.id;
+
+            const btnConfirmDelete = document.getElementById("confirmar-eliminacion");
+            const btnCancelDelete = document.getElementById("cancelar-eliminacion");
+
+            btnConfirmDelete.addEventListener("click", async () => {
+              const idProducto = parseInt(idProductoEliminar.value);
+              const resultDelete = await productService.deleteProduct(idProducto);
+              if(resultDelete){
+                alert("Producto eliminado exitosamente");
+              } else {
+                alert("Error al eliminar el producto");
+              }
+              location.reload();
+            });
+            btnCancelDelete.addEventListener("click", () => {
+              ventanaConfirmacion.classList.add("hidden");
+              overlay.classList.add("hidden");
+              idProductoEliminar.value = "";
+            });
+          });
+          card.appendChild(editDeleteContainer);
+          
+        });
+      }
+
+      async function saveFormData(e){
+        e.preventDefault();
+        const formData = getFormData();
+        const archivoImagen = productoImagen.files[0];
+        switch(modoForm){
+            case "create":
+              const resultCreate = await productService.createProduct(formData, archivoImagen);
+              if(resultCreate){
+                alert("Producto creado exitosamente");
+              }else{
+                alert("Error al crear el producto");
+              }
+            break;
+            case "edit":
+              const resultEdit = await productService.updateProduct(formData, archivoImagen);
+              if(resultEdit){
+                alert("Producto actualizado exitosamente");
+              }else{
+                alert("Error al actualizar el producto");
+              }
+            break;
+        }
+        closeProductForm();
+        resetProductForm();
+        location.reload();
+      }
+
+      function getFormData(){
+        const formData = {
+          id: formId.value,
+          titulo: productoTitulo.value,
+          descripcion: productoDescripcion.value,
+          precio: productoPrecio.value,
+          stock: productoStock.value,
+          imagen: productoImgUrl.value,
+          categorias: categoriasSeleccionadasIds,
+        };
+        return formData;
+      }
+      function openProductForm(){
+        overlay.classList.remove("hidden");
+        productoForm.classList.remove("hidden");
+        loadCategoriesIntoSelect();
+      }
+      function loadDataIntoForm(productData) {
+        productoTitulo.value = productData.titulo;
+        productoDescripcion.value = productData.descripcion;
+        productoPrecio.value = productData.precio;
+        productoStock.value = productData.stock;
+        productoImgUrl.value = productData.imagen;
+        productData.categorias.forEach((categoria) => {
+          selectCategory(categoria.id);
+        });
+      }
+      function closeProductForm() {
+        overlay.classList.add("hidden");
+        productoForm.classList.add("hidden");
+        resetProductForm();
+      }
+      function resetProductForm(){
+        modoForm = "create";
+        productoTitulo.value = "";
+        productoDescripcion.value = "";
+        productoPrecio.value = "";
+        productoStock.value = "";
+        productoImgUrl.value = "";
+        selectCategorias.value = "";
+        categoriasSeleccionadasIds = [];
+      }
+
+
+      function loadCategoriesIntoSelect() {
+        selectCategorias.innerHTML = "";
+        categoriasDisponibles.forEach((categoria) => {
+          const option = document.createElement("option");
+          option.value = categoria.id;
+          option.textContent = categoria.nombre;
+          selectCategorias.appendChild(option);
+        });
+        selectCategorias.addEventListener("change", (e) => {
+          const categoriaId = parseInt(e.target.value);
+          selectCategory(categoriaId);
+        });
+      }
+      function selectCategory(categoriaId){
+        if(categoriaId && !categoryAdded(categoriaId)){
+          categoriasSeleccionadasIds.push(categoriaId);
+          const categoria = categoriasDisponibles.find(c => c.id === categoriaId);
+          if(categoria){
+            const span = document.createElement("span");
+            span.textContent = categoria.nombre;
+            span.className = "bg-green-400 text-white px-4 pr-8 py-2 mr-3 rounded relative";
+            
+            const button = document.createElement("button");
+            button.textContent = "X";
+            button.className = `bg-red-400 text-white text-sm font-semibold py-1 px-2 rounded-full 
+                absolute right-1 top-1/2 translate-y-[-50%]`;
+            button.addEventListener("click", () => {
+              removeCategory(categoriaId);
+              span.remove();
+            });
+            span.appendChild(button);
+            contenedorCategoriasSeleccionadas.appendChild(span);
+          }
+        }
+      }
+      function categoryAdded(categoriaId){
+        return categoriasSeleccionadasIds.includes(categoriaId);
+      }
+      function removeCategory(categoriaId){
+        categoriasSeleccionadasIds = categoriasSeleccionadasIds.filter(id => id !== categoriaId);
+      }
 
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
-</body>
 
+    <script src="https://cdn.tailwindcss.com"></script>
+  </body>
 </html>

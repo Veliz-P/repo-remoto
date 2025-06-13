@@ -155,7 +155,7 @@
         &copy; 2023 Nico's Shop. Todos los derechos reservados.
       </p>
     </footer>
-    <script>
+    <script type="module">
       const btnCerrarSesion = document.getElementById("btn-cerrar-sesion"); 
       const btnIniciarSesion = document.getElementById("btn-iniciar-sesion");
       if (!localStorage.getItem("access_token") || !localStorage.getItem("user_data")) {
@@ -176,6 +176,17 @@
       btnIniciarSesion.addEventListener("click", () => {
         window.location.href = "login.html";
       });
+      /* fragmento a adicionar para cargar catálogo de productos
+      const productosContainer = document.getElementById("productos");
+      let productos = [];
+
+      import {productService} from "./js/productService.js";
+      import {uiFactory} from "./js/uiFactory.js";
+      document.addEventListener("DOMContentLoaded", async () => {
+        productos = await productService.getAllProducts();
+        uiFactory.createProductsCards(productos, productosContainer);
+      });
+      */
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module" src="app.js"></script>
