@@ -245,7 +245,7 @@
       async function verifyUser(){
         const userData = await authService.me();
         if (!userData || userData.rol !== "admin") {
-          alert("Acceso denegado. Solo los administradores pueden acceder a esta página.");
+          alert("Acceso denegado. Solo los administradores con sesiones válidas pueden acceder a esta página.");
           window.location.href = "index.html";
         }
       }

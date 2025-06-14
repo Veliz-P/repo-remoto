@@ -1,4 +1,4 @@
-import { firebaseIntegration } from "../firebaseIntegration.js";
+import { firebaseIntegration } from "./firebaseIntegration.js";
 const API_BASE_URL = 'http://localhost:8000/api';
 
 const getAllProducts = async () => {
@@ -146,6 +146,9 @@ const deleteProduct = async (id) => {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     });
+    if (response.status === 204) {
+      return true;
+    }
     if (!response.ok) throw new Error("Error al eliminar el producto");
     return true;
   } catch (error) {
